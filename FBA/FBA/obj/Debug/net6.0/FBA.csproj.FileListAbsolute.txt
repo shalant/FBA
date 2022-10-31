@@ -813,3 +813,4 @@ C:\Users\digdr\Documents\coding\FBA\FBA\FBA\obj\Debug\net6.0\FBA.dll
 C:\Users\digdr\Documents\coding\FBA\FBA\FBA\obj\Debug\net6.0\refint\FBA.dll
 C:\Users\digdr\Documents\coding\FBA\FBA\FBA\obj\Debug\net6.0\FBA.pdb
 C:\Users\digdr\Documents\coding\FBA\FBA\FBA\obj\Debug\net6.0\ref\FBA.dll
+C:\Users\digdr\Documents\coding\FBA\FBA\FBA\obj\Debug\net6.0\scopedcss\Shared\ShoppingListLayout.razor.rz.scp.css

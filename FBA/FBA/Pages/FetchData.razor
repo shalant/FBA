@@ -37,21 +37,25 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private WeatherForecast? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast>("Berlin");
     }
 
-    public class WeatherForecast
+    public partial class WeatherForecast : Forecast
     {
-        public DateTime Date { get; set; }
+        public string? Description { get; set; }
+        public Forecast[]? forecast { get; set; }
+    }
 
-        public int TemperatureC { get; set; }
+    public class Forecast
+    {
+        public string? Temperature { get; set; }
 
-        public string? Summary { get; set; }
+        public string? Day { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public string? Wind { get; set; }
     }
 }

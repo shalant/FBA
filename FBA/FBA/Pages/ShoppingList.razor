@@ -1,11 +1,9 @@
 ﻿@page "/shoppingList"
+@layout ShoppingListLayout
 @using FBA.Data;
 <PageTitle>@title</PageTitle>
 
 <h3>ShoppingList</h3>
-@*<input placeholder="Grocery Name" @bind="groceryName" />
-<input placeholder="Grocery Price" @bind="groceryPrice" />
-<button @onclick="AddGrocery">Add Grocery</button>*@
 
 <EditForm Model="@grocery" OnSubmit="AddGrocery">
     <DataAnnotationsValidator />
