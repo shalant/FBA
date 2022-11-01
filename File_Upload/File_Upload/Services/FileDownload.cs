@@ -5,6 +5,7 @@ namespace File_Upload.Services
     public interface IFileDownload
     {
         Task<List<String>> GetUploadedFiles();
+        Task DownloadFile(string url);
     }
     public class FileDownload : IFileDownload
     {
@@ -28,11 +29,16 @@ namespace File_Upload.Services
 
                         var buffer = memorystream.ToArray();
                         var fileType = GetMimeTypeForFileExtension(file);
-                        base64Urls.Add($"data:{ fileType }; base64Urls, { Convert.ToBase64String(buffer)}");
+                        base64Urls.Add($"data:{ fileType }; base64, { Convert.ToBase64String(buffer)}");
                     }
                 }
             }
             return base64Urls;
+        }
+
+        public Task DownloadFile(string url)
+        {
+            throw new NotImplementedException();
         }
     }
 
