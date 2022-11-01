@@ -1,0 +1,13 @@
+﻿@page "/downloads"
+@using File_Upload.Services;
+@inject IFileDownload fileDownload;
+
+<h3>Downloads</h3>
+
+@code {
+    private IList<string> previewImages = new List<string>();
+
+    protected async override Task OnInitializedAsync(){
+        previewImages = await fileDownload.GetUploadedFiles();
+    }
+}
