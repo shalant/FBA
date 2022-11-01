@@ -1,5 +1,5 @@
 ﻿function downloadFile(fileDataUrl) {
-    fetch(fileDataUrl).then(response = response.blob()).then(blob => {
+    fetch(fileDataUrl).then(response => response.blob()).then(blob => {
 
         var link = window.document.createElement("a");
         link.href = window.URL.createObjectURL(blob);

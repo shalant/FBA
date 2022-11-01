@@ -34,8 +34,8 @@
         previewImages = await fileDownload.GetUploadedFiles();
     }
 
-    private void DownloadFile(string url)
+    private async void DownloadFile(string url)
     {
-
+        await fileDownload.DownloadFile(url);
     }
 }
