@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using IdentityApp.Data;
 using IdentityApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using IdentityApp.Authorization;
 
 namespace IdentityApp.Pages.Invoices
 {
-    public class EditModel : PageModel
+    public class EditModel : DI_BasePageModel
     {
-        private readonly IdentityApp.Data.ApplicationDbContext _context;
 
-        public EditModel(IdentityApp.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<IdentityUser> userManager)
+            : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         [BindProperty]
@@ -25,19 +29,27 @@ namespace IdentityApp.Pages.Invoices
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Invoice == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var invoice =  await _context.Invoice.FirstOrDefaultAsync(m => m.InvoiceId == id);
-            if (invoice == null)
+            Invoice =  await Context.Invoice.FirstOrDefaultAsync(m => m.InvoiceId == id);
+
+            if (Invoice == null)
             {
                 return NotFound();
             }
-            Invoice = invoice;
+
+            var IsAuthorized = await AuthorizationService.AuthorizeAsync(
+            User, Invoice, InvoiceOperations.Update);
+
+            if (IsAuthorized.Succeeded == false)
+                return Forbid();
+
             return Page();
         }
+
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
@@ -48,11 +60,11 @@ namespace IdentityApp.Pages.Invoices
                 return Page();
             }
 
-            _context.Attach(Invoice).State = EntityState.Modified;
+            Context.Attach(Invoice).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,7 +83,7 @@ namespace IdentityApp.Pages.Invoices
 
         private bool InvoiceExists(int id)
         {
-          return _context.Invoice.Any(e => e.InvoiceId == id);
+          return Context.Invoice.Any(e => e.InvoiceId == id);
         }
     }
 }
