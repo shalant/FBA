@@ -42,7 +42,7 @@ namespace IdentityApp.Pages.Invoices
             }
 
             var IsAuthorized = await AuthorizationService.AuthorizeAsync(
-            User, Invoice, InvoiceOperations.Update);
+                User, Invoice, InvoiceOperations.Update);
 
             if (IsAuthorized.Succeeded == false)
                 return Forbid();
@@ -50,15 +50,24 @@ namespace IdentityApp.Pages.Invoices
             return Page();
         }
 
-
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+
+            var invoice = await Context.Invoice.AsNoTracking()
+                .SingleOrDefaultAsync(m => m.InvoiceId == id);
+
+            if (invoice == null)
+                return NotFound();
+
+            Invoice.CreatorId = invoice.CreatorId;
+
+            var IsAuthorized = await AuthorizationService.AuthorizeAsync(
+                User, Invoice, InvoiceOperations.Update);
+
+            if (IsAuthorized.Succeeded == false)
+                return Forbid();
 
             Context.Attach(Invoice).State = EntityState.Modified;
 
