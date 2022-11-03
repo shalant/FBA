@@ -3,8 +3,57 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+@section Scripts {
+    <script>
+        const labels = [
+            'Janaury',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Revenue",
+                    backgroundColor: "rgb(255,99,132)",
+                    borderColor: "rgb(255,99,232)",
+                    data: @Json.Serialize(Model.revenue)
+                }
+            ] 
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+}
