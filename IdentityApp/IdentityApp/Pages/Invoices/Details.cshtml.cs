@@ -38,13 +38,41 @@ namespace IdentityApp.Pages.Invoices
                 return NotFound();
             }
 
-            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+            var isCreator = await AuthorizationService.AuthorizeAsync(
                 User, Invoice, InvoiceOperations.Read);
+
+            var isManager = User.IsInRole(Constants.InvoiceManagersRole);
+
+            if (isCreator.Succeeded == false && isManager == false)
+                return Forbid();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(int id, InvoiceStatus status)
+        {
+
+            Invoice = await Context.Invoice.FindAsync(id);
+
+            if (Invoice == null)
+                return NotFound();
+
+            var invoiceOperation = status == InvoiceStatus.Approved 
+                ? InvoiceOperations.Approve
+                : InvoiceOperations.Reject;
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+                User, Invoice, invoiceOperation);
 
             if (isAuthorized.Succeeded == false)
                 return Forbid();
 
-            return Page();
+            Invoice.Status = status;
+            Context.Invoice.Update(Invoice);
+
+            await Context.SaveChangesAsync();
+
+            return RedirectToPage("./index");
         }
     }
 }
