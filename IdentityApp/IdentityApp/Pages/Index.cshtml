@@ -1,4 +1,5 @@
 ﻿@page
+@using IdentityApp.Authorization
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -7,14 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 
-<div class="text-center">
+<div class="text-center mb-5">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>This is our Invoice Management System.</p>
 </div>
 
-<div>
-    <canvas id="myChart"></canvas>
-</div>
+
+@if(User.IsInRole(Constants.InvoiceAdminRole))
+{
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+}
+
 
 @section Scripts {
     <script>
@@ -37,10 +43,25 @@
             labels: labels,
             datasets: [
                 {
-                    label: "Revenue",
+                    label: "Revenue Submitted",
+                    backgroundColor: "rgb(0,0,0)",
+                    borderColor: "rgb(0,0,0)",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueSubmitted)
+                },
+                {
+                    label: "Revenue Approved",
+                    backgroundColor: "rgb(132,99,255)",
+                    borderColor: "rgb(132,99,255)",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueApproved)
+                },
+                {
+                    label: "Revenue Rejected",
                     backgroundColor: "rgb(255,99,132)",
                     borderColor: "rgb(255,99,232)",
-                    data: @Json.Serialize(Model.revenue)
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueRejected)
                 }
             ] 
         };
